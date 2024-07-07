@@ -11,7 +11,6 @@ async function createUser(req, res) {
         res.status(500).json({ error: "Internet Server Error" });
     }
 }
-
 // Get all users
 async function getUsers(req, res) {
     try {
@@ -22,7 +21,6 @@ async function getUsers(req, res) {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
-
 // Get a user by ID
 async function getUserById(req, res) {
     const userId = req.params.id;
@@ -38,7 +36,6 @@ async function getUserById(req, res) {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
-
 // Update a user by ID
 async function updateUserById(req, res) {
     const userId = req.params.id;
@@ -59,7 +56,6 @@ async function updateUserById(req, res) {
         res.status(500).json({ error: "Internal Server Error" });
     }
 }
-
 // Delete a user by ID
 async function deleteUserById(req, res) {
     const userId = req.params.id;
@@ -77,6 +73,8 @@ async function deleteUserById(req, res) {
     }
 }
 
+
+
 module.exports = {
     createUser,
     getUsers,
@@ -84,3 +82,30 @@ module.exports = {
     updateUserById,
     deleteUserById
 }
+
+
+/*
+findOne
+const user = await User.findOne({ where: { lastName: 'test' } });
+
+findAll
+const users = await User.findAll({ where: { age: { [Sequelize.Op.gt]: 18 } } });
+
+findAndCountAll
+const { rows, count } = await User.findAndCountAll({ where: { active: true } });
+
+findByPk
+const user = await User.findByPk(1);
+
+findOrCreate
+const [user, created] = await User.findOrCreate({
+where: { lastName: 'test' },
+defaults: {age: 30 }
+ });
+ 
+findOne with Associations
+const user = await User.findOne({
+where: { lastName: 'test },
+include: [Post]
+});
+*/
