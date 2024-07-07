@@ -85,6 +85,14 @@ module.exports = {
 
 
 /*
+#V1#
+####
+
+
+
+#V2#
+####
+
 findOne
 const user = await User.findOne({ where: { lastName: 'test' } });
 
@@ -102,7 +110,7 @@ const [user, created] = await User.findOrCreate({
 where: { lastName: 'test' },
 defaults: {age: 30 }
  });
- 
+
 findOne with Associations
 const user = await User.findOne({
 where: { lastName: 'test },
