@@ -93,6 +93,16 @@ return age;
 #
 # Validations
 #
+exmpls:
+allowNull: ensures that the attribute is not null.
+notEmpty: Ensures that the attribute is not an empty string.
+isEmail: Validates that the attribute is a balid email address.
+isNumeric: Validates that the attribute is a numeric value.
+len: Validates the length of a string attribute.
+isIn: Validates that the attribute's value is wwithin a predefind list of values.
+isDate: Validates that the attribute is a valid date.
+
+
 const User = sequelize.define('User', {
 username: {
 type: DataTypes.STRING,
