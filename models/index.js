@@ -1,13 +1,13 @@
 // models/index.js
 const User = require("./user");
-const Post = require("./post");
+const Profile = require("./profile");
 
 //Define associations if needed
-User.hasMany(Post);
-Post.belongsTo(User);
+User.hasOne(Profile);
+Profile.belongsTo(User);
 
 module.exports = {
   User,
-  Post
+  Profile
 
 };
