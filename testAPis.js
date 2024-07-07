@@ -1,5 +1,5 @@
-/*
 
+/*  
 #V1#
 #
 findAllRecords
@@ -87,4 +87,53 @@ const today = new Date();
 const age = today.getFullYear() - birthdate.getFullYear();
 return age;
 };
+*/
+////////////////////////////////////////////////////////////////////
+/*
+#
+# Validations
+#
+const User = sequelize.define('User', {
+username: {
+type: DataTypes.STRING,
+allowNull: false,
+unique: true,
+validate: {
+isAlphanumeric: true, // Validates that the username consists of only letters and numbers
+len: [3, 20], // Validates that the usernaame length is vetween 3 and 20 charachters
+},
+},
+email: {
+type: DataTypes.STRING,
+allowNull: false,
+unique: true,
+validate: {
+isEmail: true, // Validate that the email is a valid email address
+},
+},
+});
+#
+# Constraints
+#
+const User = sequelize.define('User', {
+id: {
+type: DataTypes.INTEGER,
+primaryKey: true, // Specifies id as the primary key
+autoIncrement: true, // Automatically generates a unique ID
+},
+username: {
+type: DataTypes.STRING,
+allowNull: false,
+unique: true, // Enforces uniqueness on the username
+},
+postId: {
+type: DataTypes.INTEGER,
+references: {
+model: 'Posts', // References the 'Posts' table
+key: 'id', // References the 'id' column in the 'Posts' table
+},
+onUpdate: 'CASCADE', // Cascade updates to related records
+onDelete: 'SET NULL', // Set postId to NULL on deletion of related record
+},
+});
 */
