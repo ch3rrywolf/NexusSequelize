@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const userRoutes = require("./routes/userRoutes");
-const { User, Profile, Post } = require("./models")
+const { User, Profile, Post, Student, Course } = require("./models")
 const sequelize = require('./config/database');
 
 const app = express();
@@ -29,32 +29,59 @@ app.use(bodyParser.json());
 // })();
 
 // Add posts
+// app.use("/api", userRoutes);
+// (async () => {
+//     await sequelize.sync();
+//     const user = await User.create({ username: "wolf_test"});
+//     const post1 = await Post.create({
+//         title: "num 1 Post",
+//         content: "This is content of post 1."
+//     });
+//     const post2 = await Post.create({
+//         title: "num 2 Post",
+//         content: "This is content of post 2."
+//     });
+//     const post3 = await Post.create({
+//         title: "num 3 Post",
+//         content: "This is content of post 3."
+//     });
+
+//     // Associate the posts with the user
+//     await user.addPosts([post1, post2, post3]);
+
+//     // Retrieve user with associated profile
+//     const userWithPosts = await User.findOne({
+//         where: { username: "wolf_test" },
+//         include: Post // Include the associated Post model
+//     });
+//     console.log(userWithPosts.toJSON());
+// })();
+
+// Add Students and Courses
 app.use("/api", userRoutes);
 (async () => {
-    await sequelize.sync();
-    const user = await User.create({ username: "wolf_test"});
-    const post1 = await Post.create({
-        title: "num 1 Post",
-        content: "This is content of post 1."
-    });
-    const post2 = await Post.create({
-        title: "num 2 Post",
-        content: "This is content of post 2."
-    });
-    const post3 = await Post.create({
-        title: "num 3 Post",
-        content: "This is content of post 3."
-    });
+    try {
+    await sequelize.sync({ force: true });
+
+    console.log("Database sync successfully");
+
+    // Create students
+    const student1 = await Student.create({ name: "wolf" });
+    const student2 = await Student.create({ name: "wolf2" });
+
+    // Create courses
+    const course1 = await Course.create({ title: "cour1" });
+    const course2 = await Course.create({ title: "cour2" });
 
     // Associate the posts with the user
-    await user.addPosts([post1, post2, post3]);
-
-    // Retrieve user with associated profile
-    const userWithPosts = await User.findOne({
-        where: { username: "wolf_test" },
-        include: Post // Include the associated Post model
-    });
-    console.log(userWithPosts.toJSON());
+    await student1.addCourse(course1);
+    await student1.addCourse(course2);
+    await student2.addCourse(course2);
+    
+    console.log("Dummy data added successfully");
+    } catch (error) {
+        console.error("Error syncing database:", error);
+    }
 })();
 
 // Start the server

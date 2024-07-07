@@ -2,6 +2,8 @@
 const User = require("./user");
 const Profile = require("./profile");
 const Post = require("./post");
+const Student = require("./Student");
+const Course = require("./Course");
 
 //Define associations if needed
 
@@ -13,9 +15,15 @@ Profile.belongsTo(User);
 User.hasMany(Post);
 Post.belongsTo(User);
 
+// Many-To-Many
+Student.belongsToMany(Course, { through: "StudentCourse" });
+Course.belongsToMany(Student, { through: "StudentCourse" });
+
 module.exports = {
   User,
   Profile,
-  Post
+  Post,
+  Student,
+  Course
 
 };
