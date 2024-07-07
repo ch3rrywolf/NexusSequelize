@@ -147,3 +147,59 @@ onDelete: 'SET NULL', // Set postId to NULL on deletion of related record
 },
 });
 */
+/////////////////////////////////////////////////////////////////////////////
+/*
+#
+# Raw Queries
+#
+Using sequelize.query()
+
+const { Sequelize, DataTypes } = require('sequelize');
+
+// Initialize Sequelize
+const sequelize = new Sequelize('database', 'username', 'password', {
+dialect: 'mysql',
+host: '127.0.0.1',
+});
+
+// Define a model for demonstration
+const User = sequelize.define('User', {
+name: DataTypes.STRING,
+});
+
+(async () => {
+    // Sunc the model with the database
+    await sequelize.sync();
+    
+    // Insert a new record using a raw SQL query
+    const [results, metadata] = await sequelize.query('SELECT * FROM Users', {
+    type: Sequelize.QueryTypes.SELECT,
+    });
+    console.log(results);
+    })();
+
+Using Promises with sequelize.query()
+
+sequelize
+    .query('SELECT * FROM Users', { type: Sequelize.QueryTypes.SELECT })
+    .then((results) => {
+        console.log(results);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+
+Executing Other SQL Commands
+
+// Execute an UPDATE query
+sequelize.query('UPDATE Users SET name = :newName WHERE id = :userId', {
+    replacements: { newName: 'UpdatedName', userId: 1 },
+    type: Sequelize.QueryTypes.UPDATE,
+});
+
+// Execute an DELETE query
+sequelize.query('DELETE FROM Users WHERE id = :userId', {
+    replacements: { userId: 2 },
+    type: Sequelize.QueryTypes.DELETE,
+});
+*/
