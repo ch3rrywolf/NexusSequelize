@@ -11,3 +11,7 @@ async function createUser(req, res) {
         res.status(500).json({ error: "Internet Server Error" });
     }
 }
+
+module.exports = {
+    createUser
+}
