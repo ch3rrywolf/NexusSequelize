@@ -88,7 +88,22 @@ module.exports = {
 #V1#
 ####
 
+findAllRecords
+const User = require('./models/user);
+User.findAll()
+    .then((users) => {
+        console.log(users);
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
 
+findOneRecord
+User.findOne({
+where: {
+id: 1,
+},
+})
 
 #V2#
 ####
