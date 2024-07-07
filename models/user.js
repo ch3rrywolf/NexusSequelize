@@ -22,6 +22,9 @@ const User = sequelize.define("User", {
         //     isEmail: true,
         // }
     },
+    birthdate: {
+        type: DataTypes.DATE
+    },
     fullName: {
         type: DataTypes.VIRTUAL,
         get() {
@@ -32,15 +35,25 @@ const User = sequelize.define("User", {
     }
 });
 
+User.prototype.getAge = function () {
+    const birthdate = this.getDataValue("birthdate");
+    if (!birthdate) return null;
+
+    const today = new Date();
+    const age = today.getFullYear() - birthdate.getFullYear();
+    return age;
+};
+
 (async () => {
     await sequelize.sync();
 
     const user = await User.create({
         firstName: "wolf",
         lastName: "cherry",
+        birthdate: "1996-04-17",
         email: "gh@hj.com"
     });
-    console.log(user.email);
+    console.log(user.getAge());
 })();
 
 module.exports = User;
