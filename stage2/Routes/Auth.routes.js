@@ -23,6 +23,7 @@ router.post("/register", async (req, res, next) => {
             email: email,
             password: hashpassword,
         }).then(user => {
+            user.password = undefined;
             res.status(200).send(user);
         });
 
