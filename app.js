@@ -86,17 +86,39 @@ app.use("/api", userRoutes);
 
 // Soft Delete
 
+// (async () => {
+//     try {
+//         const studentToDelete = await Student.findByPk(1);
+//         if (studentToDelete) {
+//             await studentToDelete.destroy({ force: false });
+//             console.log("Student marked as deleted.");
+//         } else {
+//             console.log("Student not found.");
+//         }
+//     } catch (error) {
+//         console.error("Error deleting student:", error);
+//     }
+// })();
+
+// Test Paranoid
+
+// (async () => {
+//     const students = await Student.findAll({ paranoid: false });
+//     console.log("students", students);
+// })();
+
 (async () => {
     try {
-        const studentToDelete = await Student.findByPk(1);
-        if (studentToDelete) {
-            await studentToDelete.destroy({ force: false });
-            console.log("Student marked as deleted.");
+        const studentToRestore = await Student.findByPk(1, { paranoid: false });
+        console.log(studentToRestore);
+        if (studentToRestore) {
+            await studentToRestore.restore();
+            console.log("Student restored.");
         } else {
             console.log("Student not found.");
         }
     } catch (error) {
-        console.error("Error deleting student:", error);
+        console.error("Error restoring student:", error);
     }
 })();
 
