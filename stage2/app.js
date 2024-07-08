@@ -2,7 +2,7 @@ const express = require('express');
 const morgan = require('morgan');
 const createError = require("http-errors");
 require('dotenv').config();
-
+const db = require("./models");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -31,6 +31,8 @@ app.use((err, req, res, next) => {
     })
 })
 
-app.listen(PORT, () => {
-    console.log(`Server is running at the port ${PORT}`);
-});
+db.sequelize.sync().then( () => {
+    app.listen(PORT, () => {
+        console.log(`Server is running at the port ${PORT}`);
+    });
+})
