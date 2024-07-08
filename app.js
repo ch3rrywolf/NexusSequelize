@@ -107,7 +107,10 @@ app.use("/api", userRoutes);
 //     console.log("students", students);
 // })();
 
+// Paranoid Restore methode
+//V1
 (async () => {
+    //await Student.restore({ where: 1 });
     try {
         const studentToRestore = await Student.findByPk(1, { paranoid: false });
         console.log(studentToRestore);
