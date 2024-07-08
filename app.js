@@ -1,131 +1,58 @@
 const express = require("express");
+const multer = require("multer");
 const bodyParser = require("body-parser");
-const userRoutes = require("./routes/userRoutes");
-const { User, Profile, Post, Student, Course } = require("./models")
+const router = express.Router();
 const sequelize = require('./config/database');
-
+const File = require("./models/File");
 const app = express();
 
 // Middleware
 app.use(bodyParser.json());
 
-// Use the User routes
-
-// Add user & profile
-// app.use("/api", userRoutes);
-// (async () => {
-//     await sequelize.sync();
-//     const user = await User.create({ username: "ch3rry1_test"});
-//     const profile = await Profile.create({ firstName: "ch3rry", lastName: "ch3rry" });
-
-//     await user.setProfile(profile);
-
-//     // Retrieve user with associated profile
-//     const userWithProfile = await User.findOne({
-//         where: { username: "wolf_test" },
-//         include: Profile // Include the associated Profile model
-//     });
-//     console.log(userWithProfile.toJSON());
-// })();
-
-// Add posts
-// app.use("/api", userRoutes);
-// (async () => {
-//     await sequelize.sync();
-//     const user = await User.create({ username: "wolf_test"});
-//     const post1 = await Post.create({
-//         title: "num 1 Post",
-//         content: "This is content of post 1."
-//     });
-//     const post2 = await Post.create({
-//         title: "num 2 Post",
-//         content: "This is content of post 2."
-//     });
-//     const post3 = await Post.create({
-//         title: "num 3 Post",
-//         content: "This is content of post 3."
-//     });
-
-//     // Associate the posts with the user
-//     await user.addPosts([post1, post2, post3]);
-
-//     // Retrieve user with associated profile
-//     const userWithPosts = await User.findOne({
-//         where: { username: "wolf_test" },
-//         include: Post // Include the associated Post model
-//     });
-//     console.log(userWithPosts.toJSON());
-// })();
-
-// Add Students and Courses
-app.use("/api", userRoutes);
-// (async () => {
-//     try {
-//     await sequelize.sync({ force: true });
-
-//     console.log("Database sync successfully");
-
-//     // Create students
-//     // const student1 = await Student.create({ name: "wolf" });
-//     // const student2 = await Student.create({ name: "wolf2" });
-
-//     // // Create courses
-//     // const course1 = await Course.create({ title: "cour1" });
-//     // const course2 = await Course.create({ title: "cour2" });
-
-//     // // Associate the posts with the user
-//     // await student1.addCourse(course1);
-//     // await student1.addCourse(course2);
-//     // await student2.addCourse(course2);
-    
-//      console.log("Dummy data added successfully");
-//      } catch (error) {
-//          console.error("Error syncing database:", error);
-//      }
-// })();
-
-// Soft Delete
-
-// (async () => {
-//     try {
-//         const studentToDelete = await Student.findByPk(1);
-//         if (studentToDelete) {
-//             await studentToDelete.destroy({ force: false });
-//             console.log("Student marked as deleted.");
-//         } else {
-//             console.log("Student not found.");
-//         }
-//     } catch (error) {
-//         console.error("Error deleting student:", error);
-//     }
-// })();
-
-// Test Paranoid
-
-// (async () => {
-//     const students = await Student.findAll({ paranoid: false });
-//     console.log("students", students);
-// })();
-
-// Paranoid Restore methode
-//V1
 (async () => {
-    //await Student.restore({ where: 1 });
-    try {
-        const studentToRestore = await Student.findByPk(1, { paranoid: false });
-        console.log(studentToRestore);
-        if (studentToRestore) {
-            await studentToRestore.restore();
-            console.log("Student restored.");
-        } else {
-            console.log("Student not found.");
-        }
-    } catch (error) {
-        console.error("Error restoring student:", error);
-    }
+    // Sync the models with the database
+    await sequelize.sync();
+    console.log("done");
 })();
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, "uploads/"); // Define where to store uploaded files
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname); // Use the original filename
+    }
+});
 
-// Start the server
+const upload = multer({ storage });
+
+// Route for uploading a file
+app.post("/upload", upload.single("file"), (req, res) => {
+    // Store file information in the database using the Sequelize model
+    const { originalname, path } = req.file;
+    File.create({ filename: originalname, path })
+    .then(() => {
+        res.send("File uploaded successfully");
+    })
+    .catch(err => {
+        res.status(500).send("Error uploading the file");
+    });
+});
+
+// Route for fetching a file
+app.get("/file/:id", (req, res) => {
+    const fileId = req.params.id;
+    File.findByPk(fileId)
+    .then(file => {
+        if (!file) {
+            return res.status(404).send("File not found");
+        }
+        res.download(file.path); // Send the file for download
+    })
+    .catch(err => {
+        res.status(500).send("Error fetching the file");
+    });
+});
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log("Server is running on port", port);

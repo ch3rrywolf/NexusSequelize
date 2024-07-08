@@ -4,6 +4,7 @@ const Profile = require("./profile");
 const Post = require("./post");
 const Student = require("./Student");
 const Course = require("./Course");
+const File = require("./File");
 
 //Define associations if needed
 
@@ -24,6 +25,7 @@ module.exports = {
   Profile,
   Post,
   Student,
-  Course
+  Course,
+  File
 
 };
