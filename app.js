@@ -59,28 +59,44 @@ app.use(bodyParser.json());
 
 // Add Students and Courses
 app.use("/api", userRoutes);
+// (async () => {
+//     try {
+//     await sequelize.sync({ force: true });
+
+//     console.log("Database sync successfully");
+
+//     // Create students
+//     // const student1 = await Student.create({ name: "wolf" });
+//     // const student2 = await Student.create({ name: "wolf2" });
+
+//     // // Create courses
+//     // const course1 = await Course.create({ title: "cour1" });
+//     // const course2 = await Course.create({ title: "cour2" });
+
+//     // // Associate the posts with the user
+//     // await student1.addCourse(course1);
+//     // await student1.addCourse(course2);
+//     // await student2.addCourse(course2);
+    
+//      console.log("Dummy data added successfully");
+//      } catch (error) {
+//          console.error("Error syncing database:", error);
+//      }
+// })();
+
+// Soft Delete
+
 (async () => {
     try {
-    await sequelize.sync({ force: true });
-
-    console.log("Database sync successfully");
-
-    // Create students
-    const student1 = await Student.create({ name: "wolf" });
-    const student2 = await Student.create({ name: "wolf2" });
-
-    // Create courses
-    const course1 = await Course.create({ title: "cour1" });
-    const course2 = await Course.create({ title: "cour2" });
-
-    // Associate the posts with the user
-    await student1.addCourse(course1);
-    await student1.addCourse(course2);
-    await student2.addCourse(course2);
-    
-    console.log("Dummy data added successfully");
+        const studentToDelete = await Student.findByPk(1);
+        if (studentToDelete) {
+            await studentToDelete.destroy({ force: false });
+            console.log("Student marked as deleted.");
+        } else {
+            console.log("Student not found.");
+        }
     } catch (error) {
-        console.error("Error syncing database:", error);
+        console.error("Error deleting student:", error);
     }
 })();
 
