@@ -4,7 +4,7 @@ const createError = require("http-errors");
 const { Users } = require('../models');
 const bcrypt = require("bcrypt");
 const { authSchema, loginSchema } = require("../helpers/authValidation_schema");
-const { singAccessToken, singRefreshToken } = require("../helpers/jwt_authentication");
+const { singAccessToken, singRefreshToken, verifyRefreshToken } = require("../helpers/jwt_authentication");
 
 // Registration API
 // POST /register endpoint
@@ -63,5 +63,18 @@ router.post("/login", async (req, res, next) => {
         next(error)
     }
 });
+
+router.post("/refresh-token", async(req, res, next) => {
+
+    const { refreshToken } = req.body;
+    if(!refreshToken) throw createError.BadRequest();
+
+    const userId = await verifyRefreshToken(refreshToken);
+
+    const accessToken = await singAccessToken(userId);
+    const refToken = await singRefreshToken(userId);
+    
+    res.status(200).send({accessToken: accessToken, refreshToken: refToken});
+})
 
 module.exports = router;

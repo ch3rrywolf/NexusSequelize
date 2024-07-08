@@ -66,5 +66,18 @@ const singRefreshToken = (userId) => {
     })
 }
 
+const verifyRefreshToken = (refreshToken) => {
+    return new Promise((resolve, reject) => {
+        JWT.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, payload) => {
 
-module.exports = { singAccessToken, verifyAccessToken,singRefreshToken }
+            if(err) return reject(createError.Unauthorized());
+
+            const userId = payload.sub;
+
+            resolve(userId);
+        })
+    })
+}
+
+
+module.exports = { singAccessToken, verifyAccessToken, singRefreshToken, verifyRefreshToken }
