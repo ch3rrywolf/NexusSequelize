@@ -6,9 +6,13 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const authRoutes = require("./Routes/Auth.routes");
+
 app.get("/", (req, res, next) => {
     res.send("Welcome to hell");
 })
+
+app.use("/auth", authRoutes);
 
 app.use( async (req, res, next) => {
     /*const error = new Error("Page not Found");
