@@ -2,10 +2,10 @@ const JWT = require("jsonwebtoken");
 
 const singAccessToken = (userId) => {
     return new Promise((resolve, reject) => {
-        const payload = {
-            name : "wolf"
-        };
-        const secret = "secret is here";
+        
+        const payload = {};
+        const secret = process.env.ACCESS_TOKEN_SECRET;
+
         const options = {
             subject : `${userId}`,
             audience: 'dsi-tdsk.com',
