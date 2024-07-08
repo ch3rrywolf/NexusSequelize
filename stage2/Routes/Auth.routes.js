@@ -4,6 +4,7 @@ const createError = require("http-errors");
 const { Users } = require('../models');
 const bcrypt = require("bcrypt");
 const { authSchema } = require("../helpers/authValidation_schema");
+const { singAccessToken } = require("../helpers/jwt_authentication");
 
 // Registration API
 // POST /register endpoint
@@ -21,10 +22,13 @@ router.post("/register", async (req, res, next) => {
 
         const hashpassword = await bcrypt.hash(result.password, 10);
 
-        const user = await Users.create(result).then(user => {
+        const user = await Users.create(result); /*.then(user => {
             user.password = undefined;
             res.status(200).send(user);
-        });
+        });*/
+        const accessToken = await singAccessToken(user.id);
+
+        res.status(200).send({accessToken});
 
     } catch (error) {
         if(error.isJoi === true ) error.status = 422;
