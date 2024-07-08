@@ -203,3 +203,35 @@ sequelize.query('DELETE FROM Users WHERE id = :userId', {
     type: Sequelize.QueryTypes.DELETE,
 });
 */
+
+/* 
+# Advanced Eager Loading
+const Student = sequelize.define('Student), {
+name: DataTypes.STRING,
+});
+const Course = sequelize.define('Course), {
+name: DataTypes.STRING,
+});
+const Teacher = sequelize.define('Teacher), {
+name: DataTypes.STRING,
+});
+// Associations
+Student.belongsToMany(Course, { through: 'StudentCource' });
+Course.belongsToMany(Student, { through: 'StudentCource' });
+Course.belongsTo(Teacher); // Each course is associated with a teacher
+
+const student = await Student.findByPk(1, {
+    inculde: [
+        {
+            model: Course,
+            incule: [
+                {
+                    model: Teacher,
+                    attributes: ['name'], // Specify which teacher attributes to include
+                },
+            ],
+        },
+    ],
+});
+console.log(student.toJSON());
+*/
