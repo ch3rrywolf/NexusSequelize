@@ -23,4 +23,18 @@ const singAccessToken = (userId) => {
     })
 }
 
-module.exports = { singAccessToken }
+const verifyAccessToken = (req, res, next) => {
+    if(!req.headers['authorization']) throw next(createError.Unauthorized());
+    const authHeader = req.headers['authorization'];
+    const bearerToken = authHeader.split(' ');
+    const token = bearerToken[1];
+    JWT.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, payload) => {
+        if(err) {
+            return next(createError.Unauthorized())
+        }
+        req.payload = payload;
+        next()
+    })
+}
+
+module.exports = { singAccessToken, verifyAccessToken }

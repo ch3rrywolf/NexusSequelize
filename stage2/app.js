@@ -6,13 +6,17 @@ const db = require("./models/index");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const cors = require('cors');
+const { verifyAccessToken } = require("./helpers/jwt_authentication");
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res, next) => {
-    res.send("Welcome to hell");
+app.get("/blog", verifyAccessToken, async (req, res, next) => {
+    res.send({
+        title: "test blog",
+        description: "test blogtest blogtest blogtest blogtest blogtest blogtest blog"
+    });
 });
 
 const authRoutes = require("./Routes/Auth.routes");
