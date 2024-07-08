@@ -29,3 +29,6 @@ module.exports = {
    return queryInterface.dropTable('Customers');
   }
 };
+
+// sequelize db:migrate
+// sequelize db:migrate:undo
