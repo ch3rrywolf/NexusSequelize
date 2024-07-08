@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const createError = require("http-errors");
 const { Users } = require('../models');
+const bcrypt = require("bcrypt");
 
 // Registration API
 // POST /register endpoint
@@ -15,10 +16,12 @@ router.post("/register", async (req, res, next) => {
         const existingUser = await Users.findOne({ where: { email } });
         if (existingUser) throw createError.Conflict(`${email} is already registered.`);
 
+        const hashpassword = await bcrypt.hash(password, 10);
+
         const user = await Users.create({
             username: username,
             email: email,
-            password: password,
+            password: hashpassword,
         }).then(user => {
             res.status(200).send(user);
         });
