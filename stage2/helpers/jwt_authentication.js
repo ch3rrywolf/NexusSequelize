@@ -6,7 +6,11 @@ const singAccessToken = (userId) => {
             name : "wolf"
         };
         const secret = "secret is here";
-        const options = {}
+        const options = {
+            subject : `${userId}`,
+            audience: 'dsi-tdsk.com',
+            expiresIn: '1h'
+        }
 
         JWT.sign(payload, secret, options, (err, token) => {
             if(err) reject(err);
