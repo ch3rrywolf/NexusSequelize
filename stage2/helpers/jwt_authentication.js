@@ -44,4 +44,27 @@ const verifyAccessToken = (req, res, next) => {
     })
 }
 
-module.exports = { singAccessToken, verifyAccessToken }
+const singRefreshToken = (userId) => {
+    return new Promise((resolve, reject) => {
+
+        const payload = {};
+        const secret = process.env.REFRESH_TOKEN_SECRET;
+
+        const options = {
+            subject : `${userId}`,
+            audience: 'dsi-tdsk.com',
+            expiresIn: '1m'
+        }
+
+        JWT.sign(payload, secret, options, (err, token) => {
+            if(err){ 
+                //reject(err);
+                reject(createError.InternalServerError())
+            }
+            resolve(token);
+        })
+    })
+}
+
+
+module.exports = { singAccessToken, verifyAccessToken,singRefreshToken }

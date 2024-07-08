@@ -4,7 +4,7 @@ const createError = require("http-errors");
 const { Users } = require('../models');
 const bcrypt = require("bcrypt");
 const { authSchema, loginSchema } = require("../helpers/authValidation_schema");
-const { singAccessToken } = require("../helpers/jwt_authentication");
+const { singAccessToken, singRefreshToken } = require("../helpers/jwt_authentication");
 
 // Registration API
 // POST /register endpoint
@@ -31,8 +31,9 @@ router.post("/register", async (req, res, next) => {
             res.status(200).send(user);
         });*/
         const accessToken = await singAccessToken(user.id);
+        const refreshToken = await singRefreshToken(user.id);
 
-        res.status(200).send({accessToken});
+        res.status(200).send({accessToken, refreshToken});
 
     } catch (error) {
         if(error.isJoi === true ) error.status = 422;
@@ -53,8 +54,9 @@ router.post("/login", async (req, res, next) => {
       if(!isValidPassword) throw createError.Unauthorized("Email/password is not valid");
 
       const accessToken = await singAccessToken(user.id);
+      const refreshToken = await singRefreshToken(user.id);
 
-      res.send({accessToken});
+      res.status(200).send({accessToken, refreshToken});
 
     } catch (error) {
         if(error.isJoi === true ) throw next(createError.BadRequest("Invalid email/password"));
